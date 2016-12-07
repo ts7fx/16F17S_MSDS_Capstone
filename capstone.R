@@ -2,94 +2,95 @@ library(stringr)
 library(dplyr)
 
 #The whole pcap file is approx. 33gb 
-#We extracted 4 gb from that file, approximately 5 million packet observations
-#We looked at the first 100,000 obs
+#We extracted 4.29 gb from that file, 5.005337 million packet observations
+#We looked at the first 500,000 obs
 pcap <- read.csv('/Users/julinazhang/Desktop/Capstone Project : DS 6001/pcap portion sample', header=TRUE)
+pcap_portion <- pcap
 
-
-#deal with a portion of it for now
-pcap_portion <- pcap[1:100000,]
-
-#packet attributes: time (second passed since the start of packet collection), 
+#packet attributes: time (arrival time in terms of how many second
+#passed since the start of packet collection), 
 #source ip, destination ip, protocol type, length, source port, destination port, tcp flags
 
+#grab relevant connection
+within_network <- grep('128.143.[1-9]+.[1-9]+',pcap_portion$Source) #within UVa network
+within_cav_network <- grep('137.54.[1-9]+.[1-9]+', pcap_portion$Source) #cavalier network
+
+pcap_portion <- rbind(pcap_portion[within_network,], pcap_portion[within_cav_network])
+pcap_portion <- data.frame(pcap_portion)
+#259078
 
 #looked at basic summary statistics 
 
 ################################################################################################
 
-#source ip count
-unique(pcap_portion$Source)  
-#14387 different source ip addresses 
+#unique ip counts
+unique(pcap_portion$Source)
+#2457
+unique(pcap_portion$Destination)
+#7166
 
+
+#Duration
+time <- max(pcap_portion$Time) - min(pcap_portion$Time)
+time
+#duration: 103.9736
+
+#unique protocol
+unique(pcap_portion$Protocol)
+#59
+
+#mean length
+mean(pcap_portion$Length)
+#703.5365
+
+#source ip table
 sourceip_count <- table(pcap_portion$Source)
 sourceip_sorted <- sort(sourceip_count, decreasing = TRUE)
 head(sourceip_sorted, 10)
 
-# 128.143.83.171  128.143.62.161  128.143.235.53 128.143.109.123   172.217.2.206  109.247.140.91  128.143.22.101   128.143.228.5  128.143.122.15 
-# 7707            3346            2333            2187            1891            1730            1501            1356            1261 
-# 
-# 128.143.22.145 
-# 1174 
 
-#addresses that start with 128.143: within the uva network
-#172.217.2.206: google search page
-#109.247.140.91: located in Norway
-
-time <- max(pcap_portion$Time) - min(pcap_portion$Time)
-time
-#100000 packet captures for 101.602 seconds
+# 128.143.83.171  128.143.62.161  128.143.235.53 128.143.109.123  128.143.22.145  128.143.22.101 
+# 28713           19123           12179            9895            7580            7439 
+# 128.143.24.118  128.143.122.15  128.143.94.179   128.143.42.33 
+# 7078            6670            4748            4307 
 
 
-##############################################################################
 
-#destination ip count
+#destination ip table
 destip_count <- table(pcap_portion$Destination)
 destip_sorted <- sort(destip_count, decreasing = TRUE)
 head(destip_sorted, 10)
-# 128.143.83.171   172.217.2.206  131.247.250.90    173.194.7.42  128.143.62.161  128.143.204.31    17.248.134.9  128.143.235.53  128.143.22.145 
-# 4720            2758            2187            2174            2126            1730            1718            1486            1222 
-# 
-# 128.143.109.123 
-# 1128 
 
-#top destip: 1. uva, 2. google, 3. University of South Florida
-#https://db-ip.com/all/17.248.134
-#17.248.134.0 - 17.248.134.255 is an IP address range owned by Apple Inc.
-#17.248.134.9: the ip address for Apple 
-#possible reason for occuring so frequent: mac users sending error reports to Apple
+# 172.217.2.206 131.247.250.90   17.248.134.9   17.132.28.29 213.159.210.43   17.132.19.27   54.210.85.13 
+# 13656           9892           9031           5260           5070           4826           4617 
+# 173.194.7.42 143.215.203.33  129.24.124.76 
+# 4580           4436           4307 
 
 
-pcap_portion$Protocol
 ##############################################################################
-
-#focus of our study: data going out of the UVa network
-#so we are analyzing packets that have source ip starting with 128.143
-
-#grab source ips that start with 128.143
-within_network <- grep('128.143.[1-9]+.[1-9]+',pcap_portion$Source)
-within_cav_network <- grep('137.54.[1-9]+.[1-9]+', pcap_portion$Source)
-
-pcap_portion <- rbind(pcap_portion[within_network,], pcap_portion[within_cav_network])
-pcap_portion <- data.frame(pcap_portion)
-#52130 observations; a little over half of all the observations
-
 
 #combine source ip and destination ip to be our key
 for(i in 1:nrow(pcap_portion)){
   pcap_portion$key[i] <- paste(as.character(pcap_portion$Source[i]), as.character(pcap_portion$Destination[i]), sep = '_')
-  
 }
 
-unique(pcap_portion$key)
-#3407 unique observations
-
+unique_key <- unique(pcap_portion$key)
+#11448 unique connections
 
 #count how many times each key appears --> Kerry's isolation forest algorithm
 by_key_protol <- group_by(pcap_portion, key, Protocol)
 temp <- summarise(by_key_protol, freq = n(), mean_length = mean(Length))
-write.table(temp, file="key_protocol", row.names=F, col.names=T, sep=",")
+write.table(temp, file="new_key_protocol", row.names=F, col.names=T, sep=",")
 
+
+
+
+##############################################################################
+
+
+##############################################################################
+#                           Word Cloud                                       #  
+##############################################################################
 
 library('tm')
 library('wordcloud')
@@ -100,6 +101,17 @@ wordcloud(jeopCorpus, max.words = 100, random.order = FALSE, random.color = TRUE
 
 
 
+
+
+
+
+
+
+##############################################################################
+
+##############################################################################
+#                         Extra Stuff                                        #  
+##############################################################################
 
 key_freq <-  summarize(group_by_(pcap_portion, by = c('key','Protocol'), count = n()))
 key_length_mean <- summarize(group_by_(pcap_portion, by = c('key', 'Protocol')))
