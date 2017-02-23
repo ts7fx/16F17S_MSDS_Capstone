@@ -1,0 +1,179 @@
+#First Make directory for filtered and concatenated
+mkdir -p /home/jwc3f/flowData/Filtered_Records
+
+#Set directory
+Data_Dir_nfcapd="/home/jwc3f/netflow" # Location of raw nfcapd data files
+Prog_Dir="/home/jwc3f/scripts" # Location of this script
+Work_Dir="/home/jwc3f/flowFiles" # Output directory after filtering of IP from DNS.csv and concatenation
+Temp_Dir="/home/jwc3f/flowData" # Folder for scratch work
+NfDumpData="nfcapd-file-list.txt"
+# Add Filter directory
+Filt_Dir = '/home/jwc3f/flowData/Filtered_Records'
+
+#Input arguments for date of interest:
+Year=$1
+Month=$2
+Day=$3
+Date=$1$2$3
+
+#get the names of the nfcapd files for a particular day, around 288 files
+#echo Getting file list ...
+ls -1 $Data_Dir_nfcapd | grep $Date > $NfDumpData
+
+#Chop up the > NfDumpData into 24 portions(hours). 
+split -l 24 $NfDumpData
+
+#Create flow directory for every hour keeping the flow information in ascii
+#For every portion in nfDumpData, create temporary flow directory
+Date1=$1"-"$2"-"$3"-"$4 
+Temp_Data_Dir="$Temp_Dir/$Date1"
+if [ ! -d "$Temp_Data_Dir" ]; then
+    mkdir -p $Temp_Data_Dir
+fi
+
+Date2 = $1$2$3
+Comment="Date_first_seen         Date_last_seen           Duration Proto      Src_IP_Addr Src_Pt         Dst_IP_Addr Dst_Pt  Packets    Bytes  Flags  Input Output        Router_IP      Next_hop_IP  BG\P_next_hop_IP Src_AS Dst_AS S_Mask D_Mask Max_Rate" # Comment line at top of output
+CommentLine="#"
+CommentLine+=$Comment
+
+echo "$CommentLine" > $Temp_Data_Dir/filteredFlowRecords-$Date2-55.txt
+#For every nfcapd in Temp_Data_Dir/Data1, create temporary file called filteredFlowRecords+Date+Counter - . 
+for (( COUNTER=0; COUNTER<=55; COUNTER+=5 )); do
+		touch $Temp_Data_Dir/filteredFlowRecords+ $COUNTER.txt
+done
+
+
+#create the filter of IP addresses from DNS.csv
+Filter_StaticIP=$Prog_Dir/FilterStaticIP.filt
+Filter_Script_IP=$Prog_Dir/filter-IPaddress-from-DNS.py
+
+echo Creating filter list in $Filter_StaticIP ...
+#python $Filter_Script_IP $Prog_Dir/DNS2.csv > $Filter_StaticIP
+
+
+##Im not sure how to approach this part - obviously dont want to use a ton of cores...
+./filter-flows-per-nfcapd-parallel.sh xaa $Date1 filteredFlowRecords00.txt &
+./filter-flows-per-nfcapd-parallel.sh xab $Date1 filteredFlowRecords05.txt &
+./filter-flows-per-nfcapd-parallel.sh xac $Date1 filteredFlowRecords10.txt &
+./filter-flows-per-nfcapd-parallel.sh xad $Date1 filteredFlowRecords15.txt &
+./filter-flows-per-nfcapd-parallel.sh xae $Date1 filteredFlowRecords20.txt &
+./filter-flows-per-nfcapd-parallel.sh xaf $Date1 filteredFlowRecords25.txt &
+./filter-flows-per-nfcapd-parallel.sh xag $Date1 filteredFlowRecords30.txt &
+./filter-flows-per-nfcapd-parallel.sh xah $Date1 filteredFlowRecords35.txt &
+./filter-flows-per-nfcapd-parallel.sh xai $Date1 filteredFlowRecords40.txt &
+./filter-flows-per-nfcapd-parallel.sh xaj $Date1 filteredFlowRecords45.txt 
+./filter-flows-per-nfcapd-parallel.sh xak $Date1 filteredFlowRecords50.txt 
+./filter-flows-per-nfcapd-parallel.sh xal $Date1 filteredFlowRecords55.txt 
+
+
+#Set up flags 
+
+while [ ! -f xaa-complete ];
+do
+    echo Waiting on xaa
+    sleep 60
+done;
+echo "xaa list completed"
+
+while [ ! -f xab-complete ];
+do
+    echo Waiting on xab
+    sleep 60;
+done;
+echo "xab list completed"
+
+while [ ! -f xac-complete ];
+do
+    echo Waiting on xac
+    sleep 60;
+done;
+echo "xac list completed"
+
+while [ ! -f xad-complete ];
+do
+    echo Waiting on xad
+    sleep 60;
+done;
+echo "xad list completed"
+
+while [ ! -f xae-complete ];
+do
+    echo Waiting on xae
+    sleep 60;
+done;
+echo "xae list completed"
+
+
+while [ ! -f xaf-complete ];
+do
+    echo Waiting on xaf
+    sleep 60;
+done;
+echo "xaf list completed"
+
+while [ ! -f xag-complete ];
+do
+    echo Waiting on xag
+    sleep 60;
+done;
+echo "xag list completed"
+
+while [ ! -f xah-complete ];
+do
+    echo Waiting on xah
+    sleep 60;
+done;
+echo "xah list completed"
+
+
+while [ ! -f xai-complete ];
+do
+    echo Waiting on xai
+    sleep 60;
+done;
+echo "xai list completed"
+
+while [ ! -f xaj-complete ];
+do
+    echo Waiting on xaj
+    sleep 60;
+done;
+echo "xaj list completed"
+
+while [ ! -f xak-complete ];
+do
+    echo Waiting on xak
+    sleep 60;
+done;
+echo "xak list completed"
+
+while [ ! -f xal-complete ];
+do
+    echo Waiting on xal
+    sleep 60;
+done;
+echo "xa list completed"
+
+
+
+
+
+cat $Temp_Data_Dir/ filteredFlowRecords00 >> Filtered_Records/filteredFlowRecords-2017-02-11-55.txt
+cat $Temp_Data_Dir/ filteredFlowRecords05 >> Filtered_Records/filteredFlowRecords-2017-02-11-55.txt
+cat $Temp_Data_Dir/ filteredFlowRecords10 >> Filtered_Records/filteredFlowRecords-2017-02-11-55.txt
+cat $Temp_Data_Dir/ filteredFlowRecords15 >> Filtered_Records/filteredFlowRecords-2017-02-11-55.txt
+cat $Temp_Data_Dir/ filteredFlowRecords20 >> Filtered_Records/filteredFlowRecords-2017-02-11-55.txt
+cat $Temp_Data_Dir/ filteredFlowRecords25 >> Filtered_Records/filteredFlowRecords-2017-02-11-55.txt
+cat $Temp_Data_Dir/ filteredFlowRecords30 >> Filtered_Records/filteredFlowRecords-2017-02-11-55.txt
+cat $Temp_Data_Dir/ filteredFlowRecords35 >> Filtered_Records/filteredFlowRecords-2017-02-11-55.txt
+cat $Temp_Data_Dir/ filteredFlowRecords40 >> Filtered_Records/filteredFlowRecords-2017-02-11-55.txt
+cat $Temp_Data_Dir/ filteredFlowRecords45 >> Filtered_Records/filteredFlowRecords-2017-02-11-55.txt
+cat $Temp_Data_Dir/ filteredFlowRecords50 >> Filtered_Records/filteredFlowRecords-2017-02-11-55.txt
+cat $Temp_Data_Dir/ filteredFlowRecords55 >> Filtered_Records/filteredFlowRecords-2017-02-11-55.txt
+
+echo Final flow list record created
+
+...
+
+
+
