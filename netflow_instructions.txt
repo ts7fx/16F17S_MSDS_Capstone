@@ -1,0 +1,66 @@
+#Instructions to accessing data
+#Purpose: 1) Filter netflow files by static IP; 2) Concatenate 5 min netflow files into one-hour. 
+#Will need access to FTP server and SUDO access
+
+#First need to SSH into server
+
+#Paper Data
+/home/kmj2ge/sample_netflow/Paper_data
+
+#Concatenated netflow files from 02/13 - 02/17
+/home/kmj2ge/sample_netflow
+
+
+
+If want to extract new files need to perform following steps:
+#1)Create directory to store netflow data
+mkdir "feb-12-2017-netflow" (Already created)
+
+#2) Navigate to netflow directory using sudo access
+/home/jwc3f/netflow
+
+#3) cp all files associated with day from netflow(We did by hour but can also be done by day)
+cp nfcapd.2017021209* /home/kmj2ge/feb-12-2017-netflow (already there)
+
+
+#4)Navigate to master-parellel script file in kmj2ge directory
+cd /home/kmj2ge/scripts
+
+#5)Update scripts by changing file directory to Data_Dir_nfcapd="/home/kmj2ge/feb-12-2017-netflow"
+ vim filter-flows-per-nfcapd-master-for-parallel.sh
+ vim filter-flows-per-nfcapd-parallel.sh
+
+# Will need to read filter-flows-per-nfcapd-master-for-parallel.sh in detail to understand
+
+#6) Run filter scripts by static IP address on set of files in May-7-2017.
+#May need to adjust number of filtered records/xa created in filter scripts depending on how many netflow files your filtering..
+#In this example only six are created - FilteredflowRecords1.txt,FilteredflowRecords2.txt, FilteredflowRecords3.txt,....
+#The xa are check points created whenever set of filteredFlow records is created
+
+./filter-flows-per-nfcapd-master-for-parallel.sh 2017 02 12 > 2017-02-12-nfcapdlog.txt
+
+Check to make sure file was created in
+/home/kmj2ge/flowData/2017-02-12
+
+
+#7) Change path in concatenate flows script to concatenate each filtered flow record file(This will need to be done for each filteredRecord File. 
+
+vim concatenate-flows-one-day.sh
+
+java -classpath "$Java_Dir" OneDayReports $Record_Dir/filteredFlowRecords1.txt $Flow_Dir > $Flow_Dir/Log_1.txt
+
+time ./concatenate-flows-one-day.sh 2017 02 12 > 2017-02-12-concatenatelog.txt
+
+#8) Navigate to directory with concatenated flows:
+/home/kmj2ge/flowData/2017-02-12/concatenated
+#ExtGammaFlows.txt are the files you are interested
+
+Change file name  - "concate_Filt1.txt"
+#Create new folder outside of current directory to store concatenated file
+#Move file to new folder
+# store all of the concatenated files for that particular day (and/or day and time).
+#our files were concatenated in Python on our local machines.
+
+
+#For more details see README file in scripts directory
+

@@ -21,6 +21,7 @@
 	Duration: Total time of the connection
 	Rate: Speed at which the data was transmitted
 #### How to get the data:
+	See netflow_Instructions.txt 
 	
 ## Repository Structure
 #### goodluck.ipynb
