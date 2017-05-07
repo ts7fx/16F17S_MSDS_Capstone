@@ -12,7 +12,9 @@
 	9. You can always reach out to us for any questions! 
 	
 ## Repository Structure
-
+#### goodluck.ipynb
+	This is the notebook that will produce the results in our paper, given correct data pre-processing step.
+	
 #### Reference Notebooks: 
 	Three draft notebooks we used to produce our final, formal approach.
 	
