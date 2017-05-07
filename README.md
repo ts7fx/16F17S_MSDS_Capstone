@@ -10,8 +10,17 @@
 	6. Check out "Archive" folder to understand what obstacles we faced for this project
 	7. You can always reach out to us for any questions! 
 
-## How to get the data
-	
+## Data
+#### Data Dictionary:
+	Source Address: IP address sending packets
+	Destination Address: IP address receiving packets
+	Source Port: Port used associated with Source Address
+	Destination Port: Port used associated with Destination Address
+	Bytes: Total amount of data sent
+	Packets: Total count of packets
+	Duration: Total time of the connection
+	Rate: Speed at which the data was transmitted
+#### How to get the data:
 	
 ## Repository Structure
 #### goodluck.ipynb
