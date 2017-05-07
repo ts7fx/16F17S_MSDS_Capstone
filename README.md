@@ -1,8 +1,8 @@
 ## Comparing Isolation Forest and Local Outlier Factor on UVA NetFlow data
 	Capstone project for the M.S in Data Science, Fall 2016 - Spring 2017
 	
-## Where to start (Steps to follow)
-	1. Copy & paste all the data you got from Don and MV to the "Data" folder. 
+## Instruction
+	1. Copy & paste all the data to the "Data" folder. 
 	2. Launch jupyter notebook by typing "jupyter notebook" in your terminal
 	3. Open the notebook "goodluck.ipynb"
 	4. Install all the dependencies required, Google is your best friend here.
@@ -10,6 +10,9 @@
 	7. Check out "Reference Notebooks" folder for more details
 	8. Check out "Archive" folder to understand what obstacles we faced for this project
 	9. You can always reach out to us for any questions! 
+
+## How to get the data
+	
 	
 ## Repository Structure
 #### goodluck.ipynb
