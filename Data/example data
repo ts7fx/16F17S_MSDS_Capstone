@@ -1,0 +1,2 @@
+srcAddr,dstAddr,srcPort,dstPort,prot,bytes,pkts,dur,rate,firstTime,lastTime
+66.249.64.237,128.143.11.107,57996,80,6,50676,948,0.192,2111500.0,13:57:32.446000,13:57:32.638000
