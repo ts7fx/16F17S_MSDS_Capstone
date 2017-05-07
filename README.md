@@ -12,13 +12,14 @@
 	9. You can always reach out to us for any questions! 
 	
 ## Repository Structure
+
+#### Reference Notebooks: 
+	Three draft notebooks we used to produce our final, formal approach.
+	
 #### Archive: 
 	16Fall: past work for Fall 2016 semester
 	17Spring: past work for Spring 2017 semester
 	Shell: shell script for pre-processing data
-	
-#### Reference Notebooks: 
-	Three draft notebooks we used to produce our final, formal approach.
 	
 #### Data:
 	Example data with colnames and one entry.
