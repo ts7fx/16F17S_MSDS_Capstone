@@ -1,4 +1,4 @@
-## Comparing Isolation Forest and Local Outlier Factor on UVA NetFlow data
+## Comparing Unsupervised Learning Approaches on UVA NetFlow Data
 	Capstone project for the M.S in Data Science, Fall 2016 - Spring 2017
 	
 ## Instruction
