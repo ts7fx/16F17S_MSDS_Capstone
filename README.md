@@ -3,13 +3,12 @@
 	
 ## Instruction
 	1. Copy & paste all the data to the "Data" folder. 
-	2. Launch jupyter notebook by typing "jupyter notebook" in your terminal
-	3. Open the notebook "goodluck.ipynb"
-	4. Install all the dependencies required, Google is your best friend here.
-	5. Run the code cell by cell
-	7. Check out "Reference Notebooks" folder for more details
-	8. Check out "Archive" folder to understand what obstacles we faced for this project
-	9. You can always reach out to us for any questions! 
+	2. Launch the notebook "goodluck.ipynb"
+	3. Install libraries required
+	4. Run the code to re-produce results on our paper
+	5. Check out "Reference Notebooks" folder for more details
+	6. Check out "Archive" folder to understand what obstacles we faced for this project
+	7. You can always reach out to us for any questions! 
 
 ## How to get the data
 	
