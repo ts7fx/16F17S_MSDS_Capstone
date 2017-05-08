@@ -10,8 +10,7 @@
 	6. Check out "Archive" folder to understand what obstacles we faced for this project
 	7. You can always reach out to us for any questions! 
 
-## Data
-#### Data Dictionary:
+## Data Dictionary:
 	Source Address: IP address sending packets
 	Destination Address: IP address receiving packets
 	Source Port: Port used associated with Source Address
@@ -20,13 +19,12 @@
 	Packets: Total count of packets
 	Duration: Total time of the connection
 	Rate: Speed at which the data was transmitted
-#### How to get the data:
-	See netflow_Instructions.txt 
 	
 ## Repository Structure
 #### goodluck.ipynb
 	This is the notebook that will produce the results in our paper, given correct data pre-processing step.
-	
+#### netflow_Instructions.txt 
+	Detailed instruction on how to get the data
 #### Reference Notebooks: 
 	Three draft notebooks we used to produce our final, formal approach.
 	
